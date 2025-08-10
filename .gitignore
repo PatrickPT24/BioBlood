@@ -26,3 +26,54 @@ replay_pid*
 .python_packages
 __pycache__
 .venv
+
+# Dataset files and models (too large for GitHub)
+Backend/dataset/
+Backend/saved_models/
+*.pkl
+*.h5
+*.db
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Azure
+.azure/
