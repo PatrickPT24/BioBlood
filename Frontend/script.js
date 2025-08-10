@@ -8,97 +8,26 @@ let userHistory = [];
 const API_CONFIG = {
     // For local development
     LOCAL_API: 'http://localhost:5000',
-    // For Azure Function App (ML predictions)
-    AZURE_FUNCTION_API: 'https://bioblood-functions-ajgeg0e7hxhvcwg5.eastus-01.azurewebsites.net',
-    // For Azure Static Web App (general API)
-    STATIC_WEB_APP_API: 'https://agreeable-rock-0ae8b140f.1.azurestaticapps.net'
+    // For Azure App Service (Flask backend)
+    AZURE_APP_SERVICE: 'https://bioblood-backend.azurewebsites.net',
+    // For Azure Function App (ML predictions - fallback)
+    AZURE_FUNCTION_API: 'https://bioblood-functions-ajgeg0e7hxhvcwg5.eastus-01.azurewebsites.net'
 };
 
 // Determine which API to use based on environment
 const getApiUrl = (endpoint) => {
-    // For prediction endpoint, always use Azure Function App
-    if (endpoint.includes('/predict')) {
-        return `${API_CONFIG.AZURE_FUNCTION_API}${endpoint}`;
-    }
-
-    // For other endpoints, use local if available, otherwise Azure Function App
+    // For local development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return `${API_CONFIG.LOCAL_API}${endpoint}`;
-    } else {
-        return `${API_CONFIG.AZURE_FUNCTION_API}${endpoint}`;
-    }
-};
-
-// Mock API for demo purposes
-const mockApiRequest = async (url, options = {}) => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (url.includes('/signup')) {
-        const body = JSON.parse(options.body);
-        return {
-            success: true,
-            user: {
-                id: Date.now(),
-                name: body.name,
-                email: body.email
-            }
-        };
     }
 
-    if (url.includes('/login')) {
-        const body = JSON.parse(options.body);
-        return {
-            success: true,
-            user: {
-                id: 1,
-                name: "Demo User",
-                email: body.email
-            }
-        };
-    }
-
-    if (url.includes('/profile')) {
-        return {
-            success: true,
-            user: {
-                id: 1,
-                name: "Demo User",
-                email: "demo@example.com"
-            }
-        };
-    }
-
-    if (url.includes('/history')) {
-        return {
-            success: true,
-            predictions: [
-                {
-                    id: 1,
-                    blood_group: "A+",
-                    confidence: 0.95,
-                    timestamp: new Date().toISOString()
-                }
-            ]
-        };
-    }
-
-    if (url.includes('/feedback')) {
-        return { success: true, message: "Feedback recorded" };
-    }
-
-    throw new Error('Endpoint not found');
+    // For production, use Azure App Service
+    return `${API_CONFIG.AZURE_APP_SERVICE}${endpoint}`;
 };
 
 // API request helper
 async function apiRequest(url, options = {}) {
     try {
-        // For demo purposes, use mock API for non-prediction endpoints
-        if (!url.includes('/predict')) {
-            return await mockApiRequest(url, options);
-        }
-
-        // For prediction, try to use the real API
         const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
 
         const response = await fetch(fullUrl, {
@@ -110,45 +39,13 @@ async function apiRequest(url, options = {}) {
         });
 
         if (!response.ok) {
-            // If prediction API fails, return mock response
-            if (url.includes('/predict')) {
-                return {
-                    success: true,
-                    prediction: {
-                        blood_group: "A+",
-                        confidence: 0.87,
-                        model_predictions: {
-                            random_forest: "A+",
-                            svm: "A+",
-                            cnn: "A+"
-                        }
-                    }
-                };
-            }
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || `HTTP ${response.status}`);
         }
 
         return await response.json();
     } catch (error) {
         console.error('API Error:', error);
-
-        // If prediction fails, return mock response
-        if (url.includes('/predict')) {
-            return {
-                success: true,
-                prediction: {
-                    blood_group: "A+",
-                    confidence: 0.87,
-                    model_predictions: {
-                        random_forest: "A+",
-                        svm: "A+",
-                        cnn: "A+"
-                    }
-                }
-            };
-        }
-
         throw error;
     }
 }
