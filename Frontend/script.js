@@ -4,12 +4,35 @@ let isLoggedIn = false;
 let user = null;
 let userHistory = [];
 
+// API Configuration
+const API_CONFIG = {
+    // For local development
+    LOCAL_API: 'http://localhost:5000',
+    // For Azure Function App (ML predictions)
+    AZURE_FUNCTION_API: 'https://bioblood-functions-ajgeg0e7hxhvcwg5.eastus-01.azurewebsites.net',
+    // For Azure Static Web App (general API)
+    STATIC_WEB_APP_API: 'https://agreeable-rock-0ae8b140f.1.azurestaticapps.net'
+};
+
+// Determine which API to use based on environment
+const getApiUrl = (endpoint) => {
+    // For prediction endpoint, always use Azure Function App
+    if (endpoint.includes('/predict')) {
+        return `${API_CONFIG.AZURE_FUNCTION_API}${endpoint}`;
+    }
+
+    // For other endpoints, use local if available, otherwise Azure Function App
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return `${API_CONFIG.LOCAL_API}${endpoint}`;
+    } else {
+        return `${API_CONFIG.AZURE_FUNCTION_API}${endpoint}`;
+    }
+};
+
 // API request helper
 async function apiRequest(url, options = {}) {
     try {
-        // Add backend URL prefix if not already present
-        // const fullUrl = url.startsWith('http') ? url : `http://localhost:5000${url}`;
-        const fullUrl = url.startsWith('http') ? url : `https://agreeable-rock-0ae8b140f.1.azurestaticapps.net${url}`;
+        const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
 
         const response = await fetch(fullUrl, {
             headers: {
@@ -188,8 +211,8 @@ async function handlePrediction() {
             formData.append('user_name', user.name);
         }
         
-        // Use Azure Function App URL for prediction
-        const response = await fetch('https://bioblood-functions-ajgeg0e7hxhvcwg5.eastus-01.azurewebsites.net/api/predict', {
+        // Use the configured API URL for prediction
+        const response = await fetch(getApiUrl('/api/predict'), {
             method: 'POST',
             body: formData
         });
