@@ -181,8 +181,15 @@ async function handlePrediction() {
         const formData = new FormData();
         formData.append('file', fileInput.files[0]);
         formData.append('user_id', user ? user.id : 1);
+
+        // Add user info for notifications (if user is logged in)
+        if (user) {
+            formData.append('user_email', user.email);
+            formData.append('user_name', user.name);
+        }
         
-        const response = await fetch('http://localhost:5000/api/predict', {
+        // Use Azure Function App URL for prediction
+        const response = await fetch('https://bioblood-functions-ajgeg0e7hxhvcwg5.eastus-01.azurewebsites.net/api/predict', {
             method: 'POST',
             body: formData
         });
