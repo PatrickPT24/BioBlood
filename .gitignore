@@ -1,0 +1,47 @@
+# Large dataset files
+dataset/
+fabric_notebooks/
+fabric_setup/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Deployment files
+deploy.zip
+app.zip
+azure_deployment.zip
+
+# Large model files
+models/enhanced_ensemble_blood_group_model.pkl
+models/rf_blood_group_model.pkl
+models/traditional_ensemble_blood_group_model.pkl

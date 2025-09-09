@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🩸 BioBlood - Advanced Blood Group Detection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">
+                <div class="blood-drop">🩸</div>
+                <h2>BioBlood</h2>
+            </div>
+            <p class="brand-tagline">Advanced Fingerprint Analysis</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" id="home-link">Home</a></li>
+            <li><a href="#" id="about-link">About</a></li>
+            <li><a href="#" id="dashboard-link">Dashboard</a></li>
+            <li><button id="login-btn" class="btn btn-outline">Login</button></li>
+            <li><button id="signup-btn" class="btn btn-primary">Sign Up</button></li>
+            <li><button id="logout-btn" class="btn btn-secondary" style="display: none;">Logout</button></li>
+            <li><span id="user-info" style="display: none;"></span></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Content will be dynamically loaded here -->
+    </main>
+
+    <!-- Loading Spinner -->
+    <div id="spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <div class="blood-drop">🩸</div>
+                    <h3>Welcome Back</h3>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <div class="blood-drop">🩸</div>
+                    <h3>Join BioBlood</h3>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
